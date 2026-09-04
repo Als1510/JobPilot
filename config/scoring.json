@@ -1,0 +1,11 @@
+{
+  "weights": {
+    "requiredSkills": 40,
+    "experience": 20,
+    "roleAlignment": 15,
+    "locationRemote": 10,
+    "preferredSkills": 10,
+    "other": 5
+  },
+  "strongThreshold": 60
+}

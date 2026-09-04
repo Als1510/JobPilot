@@ -1,0 +1,183 @@
+// JobPilot M1 database schema
+// M1 uses SQLite locally. M3 switches the datasource provider to PostgreSQL.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+// ---------------------------------------------------------------------------
+// Jobs
+// ---------------------------------------------------------------------------
+
+model Job {
+  id             String   @id @default(cuid())
+  source         String
+  externalId     String
+  fingerprint    String
+  company        String
+  title          String
+  location       String?
+  remoteStatus   String   @default("UNKNOWN") // REMOTE | HYBRID | ONSITE | UNKNOWN
+  url            String?
+  description    String
+  requirements   String?
+  salary         String?
+  employmentType String?
+  postedAt       DateTime?
+  discoveredAt   DateTime @default(now())
+
+  analysis  JobAnalysis?
+  matchResult MatchResult?
+  skills    JobSkill[]
+
+  @@unique([source, externalId])
+  @@index([fingerprint])
+}
+
+model JobSkill {
+  jobId     String
+  skillId   String
+  kind      String // REQUIRED | PREFERRED
+  matched   Boolean @default(false)
+
+  job       Job   @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  skill     Skill @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@id([jobId, skillId])
+}
+
+model Skill {
+  id        String   @id @default(cuid())
+  canonical String   @unique
+  category  String
+  aliases   String   // JSON array of strings
+
+  jobs      JobSkill[]
+  profiles  CandidateSkill[]
+}
+
+// ---------------------------------------------------------------------------
+// Candidate profile (source of truth)
+// ---------------------------------------------------------------------------
+
+model CandidateProfile {
+  id                   String  @id @default(cuid())
+  name                 String
+  headline             String
+  summary              String
+  totalYearsExperience Float
+  remotePreference     String @default("REMOTE") // REMOTE | HYBRID | ONSITE
+
+  targetRoles     CandidateTargetRole[]
+  targetLocations CandidateTargetLocation[]
+  skills          CandidateSkill[]
+  workExperience  WorkExperience[]
+  education       Education[]
+  projects        Project[]
+  achievements    Achievement[]
+}
+
+model CandidateTargetRole {
+  id        String @id @default(cuid())
+  role      String
+  profileId String
+  profile   CandidateProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model CandidateTargetLocation {
+  id        String @id @default(cuid())
+  location  String
+  profileId String
+  profile   CandidateProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model CandidateSkill {
+  profileId String
+  skillId   String
+  level     String?
+
+  profile CandidateProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  skill   Skill            @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@id([profileId, skillId])
+}
+
+model WorkExperience {
+  id          String  @id @default(cuid())
+  role        String
+  company     String
+  startDate   String
+  endDate     String?
+  isCurrent   Boolean @default(false)
+  description String
+  profileId   String
+  profile     CandidateProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model Education {
+  id          String  @id @default(cuid())
+  degree      String
+  institution String
+  startDate   String?
+  endDate     String?
+  profileId   String
+  profile     CandidateProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  url         String?
+  profileId   String
+  profile     CandidateProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  techStack   ProjectTech[]
+}
+
+model ProjectTech {
+  id        String @id @default(cuid())
+  name      String
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model Achievement {
+  id          String @id @default(cuid())
+  title       String
+  description String
+  profileId   String
+  profile     CandidateProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+// ---------------------------------------------------------------------------
+// Analysis + match results
+// ---------------------------------------------------------------------------
+
+model JobAnalysis {
+  id        String   @id @default(cuid())
+  model     String
+  status    String
+  error     String?
+  extracted String   // JSON - validated ExtractedJobInfo
+  createdAt DateTime @default(now())
+
+  jobId String @unique
+  job   Job    @relation(fields: [jobId], references: [id], onDelete: Cascade)
+}
+
+model MatchResult {
+  id              String   @id @default(cuid())
+  totalScore      Float
+  isStrongMatch   Boolean
+  categoryScores  String   // JSON - CategoryScore[]
+  matchedSkills   String   // JSON - MatchedSkill[]
+  profileVersion  String
+  createdAt       DateTime @default(now())
+
+  jobId String @unique
+  job   Job    @relation(fields: [jobId], references: [id], onDelete: Cascade)
+}

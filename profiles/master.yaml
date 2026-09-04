@@ -1,0 +1,78 @@
+# ============================================================================
+# JobPilot - Master Candidate Profile (source of truth)
+# ============================================================================
+# This is the ONLY place the agent is allowed to take candidate facts from.
+# Nothing here is invented - every field must be true and verifiable.
+#
+# STATUS: DRAFT - filled from the stated target/preferences in the project
+# requirements. Personal details (past roles, companies, dates, projects)
+# are placeholders you MUST replace before a real job search.
+# ============================================================================
+
+name: "JobPilot User"        # TODO: your name
+headline: "Frontend Engineer" # TODO: refine to your headline
+summary:
+  "Frontend engineer focusing on React / Next.js / TypeScript with 3-4 years
+  of professional experience. (DRAFT - replace with your real summary.)"
+
+totalYearsExperience: 3.5    # TODO: your ACTUAL total years - never padded
+
+remotePreference: REMOTE     # REMOTE | HYBRID | ONSITE
+
+targetRoles:
+  - "Frontend Engineer"
+  - "Frontend Developer"
+  - "React Developer"
+  - "Next.js Developer"
+  - "Full-Stack Engineer"
+
+targetLocations:
+  - "India"
+  - "Remote"
+
+skills:
+  # skillName: canonical name; level optional (Beginner/Intermediate/Advanced)
+  - skillName: "React"
+    level: "Advanced"
+  - skillName: "Next.js"
+    level: "Intermediate"
+  - skillName: "TypeScript"
+    level: "Intermediate"
+  - skillName: "JavaScript"
+    level: "Advanced"
+  - skillName: "Angular"
+    level: "Beginner"
+  - skillName: "Node.js"
+    level: "Intermediate"
+  - skillName: "GraphQL"
+    level: "Intermediate"
+  - skillName: "HTML"
+    level: "Advanced"
+  - skillName: "CSS"
+    level: "Advanced"
+  - skillName: "Tailwind CSS"
+    level: "Intermediate"
+  - skillName: "Jest"
+    level: "Intermediate"
+  - skillName: "Git"
+    level: "Advanced"
+
+# ---------------------------------------------------------------------------
+# WORK EXPERIENCE - TODO: your real roles only. Nothing fabricated.
+# ---------------------------------------------------------------------------
+workExperience: []
+
+# ---------------------------------------------------------------------------
+# EDUCATION - TODO: your real education only.
+# ---------------------------------------------------------------------------
+education: []
+
+# ---------------------------------------------------------------------------
+# PROJECTS - TODO: your real projects only.
+# ---------------------------------------------------------------------------
+projects: []
+
+# ---------------------------------------------------------------------------
+# ACHIEVEMENTS - TODO: your real achievements only.
+# ---------------------------------------------------------------------------
+achievements: []
