@@ -2,12 +2,12 @@
  * Seed the database with deterministic reference data.
  *
  * M1 seeds the canonical Skill catalog (single source of truth in
- * @jobpilot/core). The candidate profile is loaded via the CLI
- * (`jobpilot profile import`) from profiles/master.yaml - we never
+ * @JobPilot/core). The candidate profile is loaded via the CLI
+ * (`JobPilot profile import`) from profiles/master.yaml - we never
  * invent profile data in a seed.
  */
 import 'dotenv/config';
-import { getAllCanonicalSkills } from '@jobpilot/core';
+import { getAllCanonicalSkills } from '@JobPilot/core';
 import { prisma } from './client';
 
 async function main() {

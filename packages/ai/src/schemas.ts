@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { REMOTE_STATUSES } from '@jobpilot/core';
+import { REMOTE_STATUSES } from '@JobPilot/core';
 
 /**
  * Zod schema for the structured information we extract from a job

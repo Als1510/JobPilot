@@ -1,4 +1,4 @@
-import type { ExtractedJobInfo } from '@jobpilot/core';
+import type { ExtractedJobInfo } from '@JobPilot/core';
 import type { ExtractJobContext, LanguageModel } from './provider';
 import { extractedJobInfoSchema } from './schemas';
 

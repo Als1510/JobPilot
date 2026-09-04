@@ -1,5 +1,11 @@
+import YAML from 'yaml';
 import { z } from 'zod';
-import type { CandidateProfile } from '@jobpilot/core';
+import type { CandidateProfile } from '@JobPilot/core';
+import { upsertProfile } from './profile';
+
+// ---------------------------------------------------------------------------
+// Profile YAML schema + mapper (moved verbatim from apps/cli/src/profile.ts)
+// ---------------------------------------------------------------------------
 
 export const remoteZ = z.enum(['REMOTE', 'HYBRID', 'ONSITE']);
 
@@ -97,4 +103,26 @@ export function yamlToProfile(y: ProfileYaml): CandidateProfile {
     })),
     achievements: y.achievements.map((a) => ({ title: a.title.trim(), description: a.description })),
   };
+}
+
+// ---------------------------------------------------------------------------
+// Profile import workflow (extracted from the CLI `profile import` handler)
+// ---------------------------------------------------------------------------
+
+export interface ImportProfileResult {
+  id: string;
+  profile: CandidateProfile;
+}
+
+/** Parse + validate a master-profile YAML string and persist it. */
+export async function importProfileFromYaml(text: string): Promise<ImportProfileResult> {
+  const parsed = profileYamlSchema.parse(YAML.parse(text));
+  const profile = yamlToProfile(parsed);
+  const id = await upsertProfile(profile);
+  return { id, profile };
+}
+
+/** Parse + validate raw YAML text into a CandidateProfile (no persistence). */
+export function parseYamlProfile(text: string): CandidateProfile {
+  return yamlToProfile(profileYamlSchema.parse(YAML.parse(text)));
 }

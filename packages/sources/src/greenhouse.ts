@@ -1,4 +1,4 @@
-import type { RawJob } from '@jobpilot/core';
+import type { RawJob } from '@JobPilot/core';
 import type { JobSource } from './JobSource';
 
 const BASE = 'https://boards-api.greenhouse.io/v1/boards';
@@ -41,7 +41,23 @@ export class GreenhouseSource implements JobSource {
     const data = (await res.json()) as { jobs?: GreenhouseJob[] };
     const jobs = data.jobs ?? [];
 
-    return jobs.map((j) => ({
+    // Fetch full description for each job from its detail endpoint
+    const enriched = await Promise.all(
+      jobs.map(async (j) => {
+        try {
+          const detailRes = await fetch(`${BASE}/${this.token}/jobs/${j.id}`);
+          if (detailRes.ok) {
+            const detail = (await detailRes.json()) as GreenhouseJob;
+            return { ...j, content: j.content ?? detail.content ?? '' };
+          }
+        } catch {
+          // Fall back to list data if detail fetch fails
+        }
+        return j;
+      }),
+    );
+
+    return enriched.map((j) => ({
       source: this.name,
       externalId: String(j.id),
       company: this.token!,

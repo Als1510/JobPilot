@@ -1,4 +1,4 @@
-import { canonicalizeSkill, parseRemoteStatus } from '@jobpilot/core';
+import { canonicalizeSkill, parseRemoteStatus } from '@JobPilot/core';
 import type { ExtractJobContext, LanguageModel } from './provider';
 
 /**
@@ -22,9 +22,12 @@ export class FakeProvider implements LanguageModel {
     const preferred: string[] = [];
 
     // Scan sentences for known skills, classifying by signal words.
+    // Split on newlines, semicolons and ". " (period + whitespace) only:
+    // a bare "." splitter would shred dotted skill names like "Next.js"
+    // into "Next" + "js" (the latter canonicalizing to "JavaScript").
     const sentences = jobDescription
-      .split(/[.\n;]+/)
-      .map((s) => s.trim())
+      .split(/\n+|;\s*|\.\s+/)
+      .map((s) => s.trim().replace(/\.+$/, ''))
       .filter(Boolean);
 
     const seen = new Set<string>();
@@ -40,14 +43,20 @@ export class FakeProvider implements LanguageModel {
       else preferred.push(canonical);
     };
 
+    // Signal words classify their own line AND carry over to the bare list
+    // items that follow (section-style JDs: "Required skills:" / "- React").
+    // Deterministic: the last explicit signal wins; text with no signal
+    // inherits the running one (defaulting to REQUIRED).
+    let carry: 'REQUIRED' | 'PREFERRED' = 'REQUIRED';
     for (const sentence of sentences) {
       const low = sentence.toLowerCase();
       const obligated = /require|must|expect|we re looking|needed|essential|should have/.test(low);
       const optional = /plus|nice to have|nice-to-have|preferred|bonus|a plus|desirable/.test(low);
+      if (obligated) carry = 'REQUIRED';
+      else if (optional) carry = 'PREFERRED';
 
       for (const word of wordTokens(sentence)) {
-        const kind: 'REQUIRED' | 'PREFERRED' = optional && !obligated ? 'PREFERRED' : 'REQUIRED';
-        addSkill(word, kind);
+        addSkill(word, carry);
       }
     }
     if (context?.title) {

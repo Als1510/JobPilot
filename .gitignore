@@ -8,18 +8,39 @@ build/
 
 # environment & secrets - never commit
 .env
-.env.local
-.env.*.local
+.env.*
+!.env.example
 
-# databases
+# databases (SQLite)
 *.db
 *.sqlite
 *.db-journal
+*.db-shm
+*.db-wal
 
 # profiles are personal data (source of truth should be committed, but never secrets)
 profiles/output/
 
 # logs / temp
 *.log
+*.tmp
+tmp-*
+.tmp/
 .DS_Store
 Thumbs.db
+
+# coverage
+coverage/
+.nyc_output/
+
+# editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini

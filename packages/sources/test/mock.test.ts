@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { normalizeJob } from '@jobpilot/core';
+import { normalizeJob } from '@JobPilot/core';
 import { MockSource } from '../src/mock';
 
 describe('mock job sources', () => {

@@ -1,5 +1,5 @@
 {
-  "name": "jobpilot",
+  "name": "JobPilot",
   "version": "0.1.0",
   "private": true,
   "description": "JobPilot - AI job search & application assistant (M1: Job Intelligence)",
@@ -11,10 +11,12 @@
     "build": "npm run build --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
+    "start": "tsx apps/cli/src/index.ts",
+    "web": "tsx apps/web/src/index.ts",
     "cli": "tsx apps/cli/src/index.ts",
-    "db:generate": "npm run db:generate -w @jobpilot/db",
-    "db:migrate": "npm run db:migrate -w @jobpilot/db",
-    "db:seed": "npm run db:seed -w @jobpilot/db",
+    "db:generate": "prisma generate --schema packages/db/prisma/schema.prisma",
+    "db:migrate": "prisma migrate dev --schema packages/db/prisma/schema.prisma",
+    "db:seed": "tsx packages/db/src/seed.ts",
     "setup": "npm install && npm run db:generate && npm run db:migrate && npm run db:seed"
   },
   "engines": {

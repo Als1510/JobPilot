@@ -1,20 +1,21 @@
 {
-  "name": "@jobpilot/cli",
+  "name": "@JobPilot/cli",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "scripts": {
+    "build": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
     "start": "tsx src/index.ts"
   },
   "dependencies": {
-    "@jobpilot/ai": "*",
-    "@jobpilot/core": "*",
-    "@jobpilot/db": "*",
-    "@jobpilot/sources": "*",
+    "@JobPilot/ai": "*",
+    "@JobPilot/core": "*",
+    "@JobPilot/db": "*",
+    "@JobPilot/service": "*",
+    "@JobPilot/sources": "*",
     "commander": "^12.1.0",
     "dotenv": "^16.4.7",
     "yaml": "^2.6.1",

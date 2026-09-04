@@ -1,5 +1,5 @@
 {
-  "name": "@jobpilot/core",
+  "name": "@JobPilot/core",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -10,6 +10,7 @@
     "./match": "./src/match/index.ts"
   },
   "scripts": {
+    "build": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   },

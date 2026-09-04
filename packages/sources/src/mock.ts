@@ -1,4 +1,4 @@
-import type { RawJob } from '@jobpilot/core';
+import type { RawJob } from '@JobPilot/core';
 import type { JobSource } from './JobSource';
 
 /**

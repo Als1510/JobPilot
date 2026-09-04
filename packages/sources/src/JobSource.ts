@@ -1,4 +1,4 @@
-import type { RawJob } from '@jobpilot/core';
+import type { RawJob } from '@JobPilot/core';
 
 /**
  * A job source adapter. Sources return RawJob records (before

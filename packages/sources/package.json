@@ -1,5 +1,5 @@
 {
-  "name": "@jobpilot/sources",
+  "name": "@JobPilot/sources",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -9,10 +9,11 @@
     ".": "./src/index.ts"
   },
   "scripts": {
+    "build": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   },
   "dependencies": {
-    "@jobpilot/core": "*"
+    "@JobPilot/core": "*"
   }
 }

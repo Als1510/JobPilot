@@ -37,6 +37,48 @@ describe('FakeProvider', () => {
   });
 });
 
+const SECTION_JD = [
+  'Frontend Engineer - Acme Co (Remote, India)',
+  '',
+  'Required skills:',
+  '- React',
+  '- TypeScript',
+  '- CSS',
+  '',
+  'Preferred skills:',
+  '- Next.js',
+  '- GraphQL',
+  '- Jest',
+].join('\n');
+
+describe('FakeProvider skill classification', () => {
+  it('splits section-style lists into required vs preferred skills', async () => {
+    const info = (await extractJobInfo(new FakeProvider(), SECTION_JD, {
+      context: { title: 'Frontend Engineer' },
+    })) as typeof extractedJobInfoSchema._type;
+
+    expect(info.requiredSkills).toEqual(expect.arrayContaining(['React', 'TypeScript', 'CSS']));
+    expect(info.requiredSkills).not.toContain('Next.js');
+    expect(info.preferredSkills).toEqual(expect.arrayContaining(['Next.js', 'GraphQL', 'Jest']));
+    expect(info.preferredSkills).not.toContain('React');
+  });
+
+  it('keeps an inline "is a plus" skill preferred and later required text required', async () => {
+    const info = (await extractJobInfo(new FakeProvider(), SAMPLE_JD)) as typeof extractedJobInfoSchema._type;
+
+    expect(info.preferredSkills).toContain('GraphQL');
+    expect(info.preferredSkills).not.toContain('React');
+    expect(info.requiredSkills).toEqual(expect.arrayContaining(['React', 'TypeScript', 'Next.js']));
+  });
+
+  it('defaults unlabeled text to required (no signal words at all)', async () => {
+    const info = (await extractJobInfo(new FakeProvider(), 'We use React and Node.js.')) as typeof extractedJobInfoSchema._type;
+
+    expect(info.requiredSkills).toEqual(expect.arrayContaining(['React', 'Node.js']));
+    expect(info.preferredSkills).toEqual([]);
+  });
+});
+
 describe('extractJobInfo validation & retry', () => {
   it('retries once when a provider returns invalid schema, then succeeds', async () => {
     let calls = 0;

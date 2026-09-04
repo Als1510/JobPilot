@@ -181,3 +181,21 @@ model MatchResult {
   jobId String @unique
   job   Job    @relation(fields: [jobId], references: [id], onDelete: Cascade)
 }
+
+// ---------------------------------------------------------------------------
+// Tracked sources (Job Discovery & Tracking foundation)
+// ---------------------------------------------------------------------------
+
+model TrackedSource {
+  id             String    @id @default(cuid())
+  sourceType     String    // e.g. "jobvetta", "greenhouse", "career-page"
+  identifier     String    // board token, company domain, or source-specific id
+  name           String?   // human-friendly label
+  url            String?   // optional URL (company career page, etc.)
+  enabled        Boolean   @default(true)
+  lastFetchedAt  DateTime? // last successful fetch
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@unique([sourceType, identifier]) // one tracking record per type+identifier
+}

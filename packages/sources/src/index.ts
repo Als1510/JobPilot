@@ -2,8 +2,11 @@ import type { JobSource } from './JobSource';
 import { MockSource } from './mock';
 import { GreenhouseSource } from './greenhouse';
 
+import { JobvettaSource } from './jobvetta';
+
 export * from './JobSource';
 export * from './mock';
+export * from './jobvetta';
 
 /**
  * Named source registry. Add new real sources here as they are implemented.
@@ -18,13 +21,18 @@ export function getSource(name: string, env: NodeJS.ProcessEnv = process.env): J
       return new MockSource('mock-lever');
     case 'greenhouse':
       return new GreenhouseSource(env.GREENHOUSE_BOARD_TOKEN);
+    case 'jobvetta':
+      return new JobvettaSource({
+        apiKey: env.JOBVETTA_API_KEY,
+        baseUrl: env.JOBVETTA_BASE_URL,
+      });
     default:
       throw new Error(
-        `Unknown job source "${name}". Available: mock, mock-greenhouse, mock-lever, greenhouse.`,
+        `Unknown job source "${name}". Available: mock, mock-greenhouse, mock-lever, greenhouse, jobvetta.`,
       );
   }
 }
 
 export function listSourceNames(): string[] {
-  return ['mock', 'greenhouse'];
+  return ['mock', 'greenhouse', 'jobvetta'];
 }
