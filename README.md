@@ -42,7 +42,8 @@ JobPilot/
 │   ├── ai/        # LanguageModel abstraction (Fake / OpenRouter / OpenAI-compatible)
 │   └── service/   # data access + business workflows (ingest, analyze, match)
 ├── apps/
-│   └── cli/       # commander CLI: profile, jobs, analyze, match, rank, explain
+│   ├── cli/       # commander CLI: profile, jobs, analyze, match, rank, explain
+│   └── web/       # Next.js App Router: UI + Route Handlers (/api/*)
 ├── config/        # scoring weights (explainable, tunable)
 ├── profiles/      # master candidate profile (source of truth)
 ├── .github/       # CI workflow
@@ -63,14 +64,16 @@ interpretation. Matching is fully deterministic and explainable.
 
 ### Execution model
 
-M1 is a TypeScript CLI executed through [`tsx`](https://github.com/privatenumber/tsx).
-TypeScript source is transpiled and run directly — no separate compilation
-step is required to use the application. This is the standard execution
-model for the project.
+The web application is a **Next.js App Router** application. It is built with
+`next build` and served in production with `next start`. The server honors
+`process.env.PORT` (set automatically by most platforms) and binds to all
+interfaces for external access.
 
-The `build` script is a **validation/type-safety gate** only. It runs
-`tsc --noEmit` across all packages to verify type correctness. It does not
-emit JavaScript. To run the CLI, use `npm start` or `npm run cli`.
+The `build` script (`npm run build`) compiles the Next.js application for
+production. The `start` script (`npm start`) runs the production server.
+
+> **Note:** The CLI (`apps/cli`) still runs TypeScript source directly via `tsx`.
+> Only the web application uses the Next.js build/start workflow.
 
 ### Data flow
 
@@ -84,7 +87,11 @@ Job Source (Mock/Greenhouse/Jobvetta/manual)
   → computeMatches() → computeMatch() in core → saveMatch()
   → listRankedJobs() sorts by totalScore
   → explain() formats match result + recommendationFor() display tier
+  → Next.js Route Handlers serve JSON to the React frontend
 ```
+
+The frontend (Overview, Discover, Profile, Job Detail) is built with React
+and CSS Modules. It consumes the same `/api/*` endpoints.
 
 ## Prerequisites
 
@@ -123,12 +130,11 @@ Both commands are equivalent. Arguments after `--` are forwarded to the CLI.
 ## Running the web application
 
 ```bash
-npm run web
+npm run dev
 ```
 
-Starts an Express-based HTTP API server and serves the static frontend at
-`http://localhost:3000`. The web application exposes the same M1 pipeline
-(profile, jobs, analyze, match, rank, explain) over HTTP.
+Starts the Next.js development server at `http://localhost:3000`. For production,
+build with `npm run build` and start with `npm start`.
 
 ## Command reference
 
@@ -185,16 +191,17 @@ per-category breakdown with strengths/gaps, and matched/missing skills.
 
 | Script | Description |
 |---|---|
-| `npm start -- <cmd>` | Run the CLI (alias for `npm run cli`) |
-| `npm run cli -- <cmd>` | Run the CLI |
-| `npm run web` | Start the web API server (`tsx apps/web/src/index.ts`) |
+| `npm start` | Start the Next.js production server (`next start`) |
+| `npm run dev` | Start the Next.js development server (`next dev`) |
+| `npm run web` | Alias for `npm start` |
+| `npm run cli -- <cmd>` | Run the CLI (`tsx apps/cli/src/index.ts`) |
 | `npm run setup` | Install deps + generate Prisma client + migrate + seed |
 | `npm run db:generate` | Generate Prisma client from schema |
 | `npm run db:migrate` | Apply database migrations |
 | `npm run db:seed` | Seed the canonical skill catalog |
 | `npm run typecheck` | Typecheck all packages (`tsc --noEmit`) |
 | `npm test` | Run all tests across all packages |
-| `npm run build` | Validation gate — typechecks all packages (no JS emitted) |
+| `npm run build` | Build the Next.js application for production |
 
 ## AI provider
 
@@ -242,9 +249,13 @@ default — no API keys required for testing.
 npm run build
 ```
 
-Runs `tsc --noEmit` across all packages. This is a **type-safety validation
-gate** — it verifies type correctness but does not emit JavaScript. The
-application runs TypeScript source directly via `tsx`.
+Builds the Next.js application for production. This compiles the React
+frontend, Route Handlers, and optimizes assets. The output is in `.next/`.
+
+After building, start the production server with `npm start`.
+
+> **Note:** The CLI does not require a build step — it runs TypeScript source
+> directly via `tsx`. Only the web application uses the build/start workflow.
 
 ## CI
 
@@ -261,6 +272,75 @@ All checks must pass. No API keys or secrets required.
 
 Secrets live only in `.env` (git-ignored). Never commit credentials. Treat
 candidate data as private to you.
+
+## Deployment
+
+JobPilot M1 is a **Next.js application**. It is built with `npm run build`
+and served in production with `npm start`. The entire application — UI,
+API, and frontend — runs as a single service.
+
+### Architecture
+
+```
+Browser
+  ↓
+Railway (Next.js: UI + Route Handlers)
+  ↓
+SQLite on Railway persistent volume (/data)
+```
+
+### Prerequisites
+- Node.js >= 20
+- A persistent filesystem (for SQLite)
+
+### Environment variables
+| Variable | Default | Notes |
+|---|---|---|
+| `PORT` | `3000` | Most platforms set this automatically |
+| `DATABASE_URL` | `file:./dev.db` | SQLite path; use a persistent path in production |
+| `NODE_ENV` | unset | Set to `production` to hide internal error details |
+| `LLM_PROVIDER` | `Fake` | Works offline; no API key needed |
+
+### Railway deployment
+
+1. Create a new Railway project and connect this repository.
+2. Set the **Build Command** to: `npm run build`
+3. Set the **Start Command** to: `npm start`
+4. Add a **Persistent Volume**:
+   - Mount path: `/data`
+   - This is where SQLite stores its database file.
+5. Set environment variables:
+   ```
+   DATABASE_URL=file:/data/jobpilot.db
+   NODE_ENV=production
+   LLM_PROVIDER=Fake
+   ```
+6. Railway runs `npm install` automatically. The `postinstall` script generates
+   the Prisma client and applies migrations to the persistent database.
+7. The server binds to `process.env.PORT` (Railway sets this automatically).
+
+### Database initialization
+
+The `postinstall` script handles database setup automatically:
+- `prisma generate` — generates the Prisma client from the schema
+- `prisma migrate deploy` — applies all existing migrations (non-interactive)
+
+No manual database setup is required.
+
+### Production data behavior
+
+- An **empty database** renders a usable dashboard with an empty-state message.
+- Missing profile, job analysis, or match data is handled gracefully.
+- The app does **not** seed demo data automatically — jobs are added via the
+  Discover page (fetch from source or paste a description).
+- The app does not assume any pre-existing data.
+
+### Limitations
+
+- **Single-user/demo scope**: SQLite with a persistent volume. Suitable for one
+  user. Multi-user SaaS requires PostgreSQL (M3 scope).
+- **No authentication**: anyone with the URL can access the API.
+- **No browser automation or auto-apply**: M1 is job intelligence only.
 
 ## Profile data
 

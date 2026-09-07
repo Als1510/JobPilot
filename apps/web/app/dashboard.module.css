@@ -1,0 +1,217 @@
+.lead {
+  font-size: 1.05rem;
+  color: var(--ink-soft);
+  margin: 0 0 1.25rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.statusLine {
+  font-size: 0.86rem;
+  color: var(--ink-soft);
+}
+
+.statusOk {
+  color: var(--ok);
+}
+
+.statusErr {
+  color: var(--bad);
+}
+
+.sectionTitle {
+  font-size: 1.05rem;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  margin: 1.75rem 0 0.35rem;
+  color: var(--ink);
+}
+
+.rule {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: 0.35rem 0 1rem;
+}
+
+.jobGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+
+.jobCard {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  background: var(--bg);
+}
+
+.cardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.6rem;
+}
+
+.cardTitles {
+  min-width: 0;
+}
+
+.cardTitle {
+  font-size: 1.02rem;
+  font-weight: 650;
+  margin: 0;
+}
+
+.cardTitle a {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.cardTitle a:hover {
+  color: var(--brand);
+  text-decoration: none;
+}
+
+.cardCompany {
+  margin: 0.1rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+
+.fitSignal {
+  flex: 0 0 auto;
+  text-align: center;
+  min-width: 56px;
+  padding: 0.35rem 0.15rem 0.3rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  line-height: 1.1;
+}
+
+.fitScore {
+  display: block;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.fitLabel {
+  display: block;
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+}
+
+.cardMeta {
+  font-size: 0.84rem;
+  color: var(--ink-soft);
+}
+
+.skillChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.chipOk {
+  background: #e8f5ec;
+  color: var(--ok);
+}
+
+.chipMissing {
+  background: #fdf0e8;
+  color: var(--warn);
+}
+
+.skillChip {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  padding: 0.08rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+}
+
+.cardRecommendation {
+  color: var(--brand);
+  font-size: 0.86rem;
+  font-weight: 550;
+}
+
+.cardLink {
+  font-size: 0.84rem;
+}
+
+.cardNoData {
+  color: var(--ink-soft);
+  font-size: 0.86rem;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.pageInfo {
+  font-size: 0.86rem;
+  color: var(--ink-soft);
+  min-width: 9ch;
+  text-align: center;
+}
+
+.boot {
+  text-align: center;
+  color: var(--ink-soft);
+  padding: 2.5rem;
+}
+
+.empty {
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  color: var(--ink-soft);
+}
+
+.errorBox {
+  border: 1px solid var(--bad);
+  border-left: 3px solid var(--bad);
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+  background: #fff6f6;
+  color: var(--bad);
+  font-size: 0.9rem;
+}
+
+.skillCount {
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+}
+
+/* Fit-signal tone classes */
+.fitStrong {
+  border-color: var(--ok);
+}
+
+.fitGood {
+  border-color: var(--brand);
+}
+
+.fitWeak {
+  border-color: var(--warn);
+}

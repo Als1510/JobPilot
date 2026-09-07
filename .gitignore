@@ -6,6 +6,10 @@ dist/
 build/
 *.tsbuildinfo
 
+# Next.js build output
+.next/
+out/
+
 # environment & secrets - never commit
 .env
 .env.*

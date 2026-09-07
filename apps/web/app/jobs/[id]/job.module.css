@@ -1,0 +1,152 @@
+.back {
+  display: inline-block;
+  margin-bottom: 1.25rem;
+  font-size: 0.9rem;
+}
+
+.title {
+  font-family: var(--serif);
+  font-size: 1.8rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  margin: 0 0 0.15rem;
+}
+
+.company {
+  margin: 0 0 1rem;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 0.6rem;
+  margin-bottom: 1.25rem;
+}
+
+.metaBox {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.85rem;
+}
+
+.metaLabel {
+  display: block;
+  color: var(--ink-soft);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.fit {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 64px;
+  padding: 0.45rem;
+  border: 1px solid var(--brand);
+  border-radius: 10px;
+  line-height: 1.15;
+}
+
+.fitScore {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--brand);
+}
+
+.fitLabel {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink-soft);
+}
+
+.recommendation {
+  margin: 0.75rem 0 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--brand);
+}
+
+.sectionTitle {
+  font-size: 0.95rem;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  margin: 1.5rem 0 0.5rem;
+}
+
+.breakdown {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.breakdownItem {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.6rem 0.85rem;
+  font-size: 0.88rem;
+}
+
+.breakdownLabel {
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+}
+
+.breakdownContribution {
+  color: var(--ink-soft);
+}
+
+.breakdownReasons {
+  margin: 0.2rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+
+.skillList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.3rem;
+}
+
+.skillOk {
+  color: var(--ok);
+}
+
+.skillMissing {
+  color: var(--warn);
+}
+
+.skillNoData {
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+  font-style: italic;
+}
+
+.errorBox {
+  border: 1px solid var(--bad);
+  border-left: 3px solid var(--bad);
+  border-radius: 8px;
+  padding: 0.9rem 1rem;
+  background: #fff6f6;
+  color: var(--bad);
+  font-size: 0.9rem;
+}
+
+.boot {
+  text-align: center;
+  color: var(--ink-soft);
+  padding: 2.5rem;
+}

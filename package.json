@@ -11,13 +11,16 @@
     "build": "npm run build --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
-    "start": "tsx apps/cli/src/index.ts",
-    "web": "tsx apps/web/src/index.ts",
+    "start": "npm run web",
+    "dev": "npm run dev -w @JobPilot/web",
+    "web": "npm run start -w @JobPilot/web",
     "cli": "tsx apps/cli/src/index.ts",
     "db:generate": "prisma generate --schema packages/db/prisma/schema.prisma",
     "db:migrate": "prisma migrate dev --schema packages/db/prisma/schema.prisma",
+    "db:deploy-migrations": "prisma migrate deploy --schema packages/db/prisma/schema.prisma",
     "db:seed": "tsx packages/db/src/seed.ts",
-    "setup": "npm install && npm run db:generate && npm run db:migrate && npm run db:seed"
+    "setup": "npm install && npm run db:generate && npm run db:migrate && npm run db:seed",
+    "postinstall": "npm run db:generate && npm run db:deploy-migrations"
   },
   "engines": {
     "node": ">=20"

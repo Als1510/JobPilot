@@ -1,8 +1,21 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "./dist",
-    "rootDir": "./src"
+    "jsx": "preserve",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "allowJs": true,
+    "noEmit": true,
+    "incremental": true,
+    "isolatedModules": true,
+    "plugins": [{ "name": "next" }],
+    "strictNullChecks": true,
+    "paths": {
+      "@/*": ["./*"],
+      "@jobpilot/*": ["../../packages/*/src/index.ts"]
+    }
   },
-  "include": ["src"]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "../../packages/*/src/**/*.ts"],
+  "exclude": ["node_modules"]
 }
