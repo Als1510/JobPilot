@@ -20,7 +20,7 @@
     "db:deploy-migrations": "prisma migrate deploy --schema packages/db/prisma/schema.prisma",
     "db:seed": "tsx packages/db/src/seed.ts",
     "setup": "npm install && npm run db:generate && npm run db:migrate && npm run db:seed",
-    "postinstall": "npm run db:generate && npm run db:deploy-migrations"
+    "postinstall": "npm run db:generate"
   },
   "engines": {
     "node": ">=20"
