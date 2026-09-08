@@ -1,12 +1,13 @@
 // JobPilot M1 database schema
-// M1 uses SQLite locally. M3 switches the datasource provider to PostgreSQL.
+// Primary database is PostgreSQL (Layerbase). SQLite dev.db is kept as a
+// historical backup; SQLite migration files live under prisma/migrations-sqlite/.
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 // ---------------------------------------------------------------------------
